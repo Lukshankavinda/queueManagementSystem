@@ -46,7 +46,7 @@ export class issues extends BaseEntity{
 
     @ManyToOne(() => counters)
     @JoinColumn()
-    counters!: counters;
+    counter!: counters;
 
     @CreateDateColumn()
     createdAt!: Date;
