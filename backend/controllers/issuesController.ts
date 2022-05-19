@@ -17,7 +17,7 @@ class issuesController{
             .addSelect('COUNT(issue.issue_no)', 'issues')
             .groupBy('issue.counter')
             .execute();
-        
+        console.log(issue)
         let count : counters|any;    
         count = await AppDataSource
             .getRepository( counters)
@@ -25,7 +25,7 @@ class issuesController{
             .select('id')
             .where({ status: ['active']})
             .execute();
-        
+        console.log(count)
         var lenCount = Object.keys(count).length;
         var lenIssue = Object.keys(issue).length;
         
@@ -33,7 +33,7 @@ class issuesController{
             res.status(401).send('all counters are close');
         } 
         else {
-            if (lenIssue == 0) {
+            if (lenIssue == 0 || lenCount > lenIssue) {
 
                 let actCount : counters|any;
                 actCount = await AppDataSource
@@ -41,6 +41,7 @@ class issuesController{
                     .select('actCount.id')
                     .from(counters, 'actCount')
                     .where({ status: ['active']})
+                    .orderBy('updateAt', "DESC")
                     .getOne()
 
                 
