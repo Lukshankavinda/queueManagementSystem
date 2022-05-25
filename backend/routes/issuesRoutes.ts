@@ -5,6 +5,8 @@ const router = Router();
 
 router.post('/user/addi',auth, issuesController.addIssue); // http://localhost:5000/user/addi
 router.get('/counter/getAll',auth, issuesController.getAllIssues); // http://localhost:5000/counter/getAll
-router.delete('/user/deleteIssue/:id',auth, issuesController.deleteIssues); // http://localhost:5000/user/deleteIssue/
+router.put('/user/deleteIssue/:id',auth, issuesController.deleteIssues); // http://localhost:5000/user/deleteIssue/
+router.put('/counter/deleteIssue/:id',auth, issuesController.deleteIssues); // http://localhost:5000/counter/deleteIssue/
+
 
 export default router;

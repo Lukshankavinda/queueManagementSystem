@@ -3,6 +3,7 @@ import {Request, Response} from 'express';
 import { AppDataSource } from '../data-source';
 import { issues } from '../entities/issues';
 import { counters } from '../entities/counters';
+import {getIssuesDto} from '../dto/getIssuesDto'
 
 
 class issuesController{
@@ -116,20 +117,37 @@ class issuesController{
 
     static getAllIssues = async (req:Request,res:Response) => {
 
-    //     const result = await getRepository(issues).find();
-    //     return res.json(result);
+        const user = await AppDataSource
+            .createQueryBuilder()
+            .select("user")
+            .from(issues, "user")
+            .where("user.status = :status OR user.status = :status1",{ status: "inprogress", status1: "waiting" })
+            .andWhere("user.counter = :counter", { counter:res.locals.jwt.counter_id })
+            .orderBy({ "status": 'DESC'})
+            .getMany()
+
+        let responseData : Array<getIssuesDto> = new Array();
+
+        for (const  use of user) {
+            responseData.push(new getIssuesDto(use));
+        }
+        
+        return res.send(responseData);
     
     };
 
     static deleteIssues = async (req:Request,res:Response) => {
 
-    //     const {id} = req.params;
-    //     await issues.delete(id);
-
-    //     console.log(req.params)
-    //     res.send('del')
+        const {id} = req.params;
+        await AppDataSource
+            .createQueryBuilder()
+            .update(issues)
+            .set({ status:  ["close"]})
+            .where("id = :id", { id: id })
+            .execute()
+    
+        res.send('del')
     
     };
-
 }
 export default issuesController;
