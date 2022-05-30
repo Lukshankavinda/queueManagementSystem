@@ -125,7 +125,7 @@ class issuesController{
             .from(issues, "user")
             .where("user.status = :status OR user.status = :status1",{ status: "inprogress", status1: "waiting" })
             .andWhere("user.counter = :counter", { counter:res.locals.jwt.counter_id })
-            .orderBy({ "status": 'DESC'})
+            .orderBy({ "status": 'ASC'})
             .getMany()
         console.log(user)
         let responseData : Array<getIssuesDto> = new Array();
@@ -203,21 +203,7 @@ class issuesController{
         res.send('del')
 
     };
-
-    static done = async (req:Request,res:Response) => {
-
-        const {id} = req.params;
-        await AppDataSource
-            .createQueryBuilder()
-            .update(issues)
-            .set({ status:  ["close"]})
-            .where("id = :id", { id: id })
-            .execute()
     
-        res.send('next')
-
-    };
-
     static doneNext = async (req:Request,res:Response) => {
 
         const {id} = req.params;

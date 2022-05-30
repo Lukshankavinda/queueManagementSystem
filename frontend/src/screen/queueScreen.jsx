@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from 'react'
 import axios from "axios";
-import Form from 'react-bootstrap/Form'
+//import Form from 'react-bootstrap/Form'
 import { Button, Stack, Row, Col } from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {useNavigate, Link} from 'react-router-dom'
 import UserNavbar from './userNavbar';
-
-
+import io from 'socket.io-client' 
+const socket = io.connect("http://localhost:5000");
 
 
 function QueueScreen() {
 
+  socket.emit()
   const [posts,setposts] =useState([])
   const [requestError,setRequestError]= useState()
   const [error,setError]=useState(null);

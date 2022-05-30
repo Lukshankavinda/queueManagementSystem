@@ -47,12 +47,12 @@ function UserLoginScreen(props){
         }).then(res=>{
           console.log(res.data)
           setposts(res.data)
-          if (res.data === 'false') {
-            console.log('get  data if '+res.data)
-            navigater('/user/issues')
+          if (res.data === false) {
+            console.log('get data if '+res.data)
+            navigater('/user/issues');
           } else {
-            console.log('get  data else'+res.data)
-            navigater('/user/queue')
+            console.log('get data else '+res.data)
+            navigater('/user/queue');
           }
         }).catch(err=>{
           console.log(err)

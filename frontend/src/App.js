@@ -22,18 +22,18 @@ function App() {
       
       <Router>
         <Routes>
-          <Route path='/'                  element={ <HomeScreen/>            }/>
-          <Route path='/user/login'        element={ <UserLoginScreen/>       }/>
-          <Route path='/user/register'     element={ <UserRegisterScreen/>    }/>
-          <Route path='/user/issues'       element={ <IssueScreen/>           }/>
-          <Route path='/user/queue'        element={ <QueueScreen/>           }/>
-          <Route path='/user/notification' element={ <NotificationScreen/>    }/>
-          <Route path='/unav'              element={ <UserNavbar/>            }/>
-          <Route path='/counter/login'     element={ <CounterLoginScreen/>    }/>
-          <Route path='/counter/register'  element={ <CounterRegisterScreen/> }/>
-          <Route path='/counter/getall'    element={ <CounterScreen/>         }/>
-          <Route path='/counter/getone/:id'    element={ <CounterIssueScreen/>    }/>
-          <Route path='/cnav'              element={ <CounterNavbar/>         }/>
+          <Route path='/'                   element={ <HomeScreen/>            }/>
+          <Route path='/user/login'         element={ <UserLoginScreen/>       }/>
+          <Route path='/user/register'      element={ <UserRegisterScreen/>    }/>
+          <Route path='/user/issues'        element={ <IssueScreen/>           }/>
+          <Route path='/user/queue'         element={ <QueueScreen/>           }/>
+          <Route path='/user/notification'  element={ <NotificationScreen/>    }/>
+          <Route path='/unav'               element={ <UserNavbar/>            }/>
+          <Route path='/counter/login'      element={ <CounterLoginScreen/>    }/>
+          <Route path='/counter/register'   element={ <CounterRegisterScreen/> }/>
+          <Route path='/counter/getall'     element={ <CounterScreen/>         }/>
+          <Route path='/counter/getone/:id' element={ <CounterIssueScreen/>    }/>
+          <Route path='/cnav'               element={ <CounterNavbar/>         }/>
         </Routes>
       </Router>
     </div>

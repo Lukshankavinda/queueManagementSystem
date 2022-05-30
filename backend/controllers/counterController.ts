@@ -115,7 +115,7 @@ class counterController{
                 return res.send('true')
             } else {
                 console.log("false")
-                return res.send('false')
+                return res.send('false') 
             }
     };
 

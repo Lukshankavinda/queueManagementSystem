@@ -2,7 +2,6 @@ import React, { useState , useEffect } from 'react'
 import axios from "axios";
 import Form from 'react-bootstrap/Form'
 import InputGroup from 'react-bootstrap/InputGroup'
-import Navbar from 'react-bootstrap/Navbar'
 import { Button, Nav, Col, FormControl } from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {useNavigate, Link} from 'react-router-dom'
@@ -41,17 +40,6 @@ function CounterScreen(props) {
     })
   },[])
 
-  const handleLogin =()=>
-  {
-    // const page = id
-    // navigate(`/counter/getone/`, {
-    //   state:{
-    //       page
-    //     },
-    // });
-
-  }
-
   return (
     <div>
           <CounterNavbar/>
@@ -69,30 +57,24 @@ function CounterScreen(props) {
             </>
             {posts.map(post=>(
             <div>
-            
-            <Form.Group className="mb-3 " style={{marginTop:"20px"}}>
-                    <Col sm={{ span:5, offset: 3}} >
-                      <InputGroup >
-                        <InputGroup.Text >{post.issue_no}</InputGroup.Text>
-                        <FormControl
-                          placeholder={post.name} disabled/>
-                        <FormControl
-                          placeholder={post.tpno} disabled/>
-                          <Button 
-                            variant="outline-secondary">
-                                call
-                          </Button>
-                      </InputGroup>
-                    </Col>
-                </Form.Group>
-                </div>
-                 ))}
-
-            </div>
-
-         
-
-
+              <Form.Group className="mb-3 " style={{marginTop:"20px"}}>
+                <Col sm={{ span:5, offset: 3}} >
+                  <InputGroup >
+                    <InputGroup.Text >{post.issue_no}</InputGroup.Text>
+                      <FormControl
+                        placeholder={post.name} disabled/>
+                      <FormControl
+                        placeholder={post.tpno} disabled/>
+                      {<a onClick={()=>{navigate(`/counter/getone/${post.id}`,{state:{id:post.id}});}}>   
+                        <input type="button" 
+                            value={ "Call"} 
+                            class="btn btn-secondary"/>
+                      </a>}
+                  </InputGroup>
+                </Col>
+              </Form.Group>
+            </div>))}
+          </div>
     </div>
   )
 }
