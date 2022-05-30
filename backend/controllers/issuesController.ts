@@ -1,9 +1,11 @@
 import {Request, Response} from 'express';
+import {Brackets } from "typeorm";
 
 import { AppDataSource } from '../data-source';
 import { issues } from '../entities/issues';
 import { counters } from '../entities/counters';
 import {getIssuesDto} from '../dto/getIssuesDto'
+import {getOneIssuesDto} from '../dto/getOneIssuesDto'
 
 
 class issuesController{
@@ -18,7 +20,7 @@ class issuesController{
             .addSelect('COUNT(issue.issue_no)', 'issues')
             .groupBy('issue.counter')
             .execute();
-        console.log(issue)
+        
         let count : counters|any;    
         count = await AppDataSource
             .getRepository( counters)
@@ -26,7 +28,7 @@ class issuesController{
             .select('id')
             .where({ status: ['active']})
             .execute();
-        console.log(count)
+        
         var lenCount = Object.keys(count).length;
         var lenIssue = Object.keys(issue).length;
         
@@ -42,7 +44,7 @@ class issuesController{
                     .select('actCount.id')
                     .from(counters, 'actCount')
                     .where({ status: ['active']})
-                    .orderBy('updateAt', "DESC")
+                    .orderBy('updateAt', "DESC") 
                     .getOne()
 
                 
@@ -125,7 +127,7 @@ class issuesController{
             .andWhere("user.counter = :counter", { counter:res.locals.jwt.counter_id })
             .orderBy({ "status": 'DESC'})
             .getMany()
-
+        console.log(user)
         let responseData : Array<getIssuesDto> = new Array();
 
         for (const  use of user) {
@@ -133,6 +135,58 @@ class issuesController{
         }
         
         return res.send(responseData);
+    
+    };
+
+    static getOneIssues = async (req:Request,res:Response) => {
+
+        const {id} = req.params;
+        
+        const oneUser = await AppDataSource
+            .createQueryBuilder()
+            .select("oneUser")
+            .from(issues, "oneUser")
+            .where("id = :id", { id :id})
+            .execute();
+        
+        await AppDataSource
+            .createQueryBuilder()
+            .update(issues)
+            .set({ status:  ["inprogress"]})
+            .where("id = :id", { id: id })
+            .execute()
+         
+        const oneUserInp = await AppDataSource
+            .createQueryBuilder()
+            .select("oneUserInp.counterId")
+            .from(issues, "oneUserInp")
+            .where("id = :id", { id :id})
+            .execute();
+
+        const oneUserInp2 = await AppDataSource
+            .createQueryBuilder()
+            .select("oneUserInp2.issue_no")
+            .from(issues, "oneUserInp2")
+            .where("id = :id", { id :id})
+            .execute();
+
+        let valCid = Number(Object.values(oneUserInp[0])) 
+        let valIno = Number(Object.values(oneUserInp2[0]))    
+        
+        await AppDataSource
+            .createQueryBuilder()
+            .update(counters)
+            .set({ ongoin:valIno})
+            .where("counter_number = :counter_number", { counter_number:valCid })
+            .execute()
+    
+        let responseOneData : Array<getOneIssuesDto> = new Array();
+
+        for (const  oneUse of oneUser) {
+            responseOneData.push(new getOneIssuesDto(oneUse));
+        }
+        console.log(responseOneData)
+        return res.send(responseOneData);
     
     };
 
@@ -147,7 +201,93 @@ class issuesController{
             .execute()
     
         res.send('del')
+
+    };
+
+    static done = async (req:Request,res:Response) => {
+
+        const {id} = req.params;
+        await AppDataSource
+            .createQueryBuilder()
+            .update(issues)
+            .set({ status:  ["close"]})
+            .where("id = :id", { id: id })
+            .execute()
     
+        res.send('next')
+
+    };
+
+    static doneNext = async (req:Request,res:Response) => {
+
+        const {id} = req.params;
+        await AppDataSource
+            .createQueryBuilder()
+            .update(issues)
+            .set({ status:  ["close"]})
+            .where("id = :id", { id: id })
+            .execute()
+        
+        const oneUser = await AppDataSource
+            .createQueryBuilder()
+            .select("oneUser")
+            .from(issues, "oneUser")
+            .where('oneUser.counter = :counter', {counter:res.locals.jwt.counter_id })
+            .andWhere(
+                new Brackets((qb) => {
+                    qb.where("oneUser.status = :status", { status: "inprogress",})
+                    qb.orWhere("oneUser.status = :status1", { status1: "waiting"  })
+                }),)
+            .orderBy({ "status": 'DESC'})
+            .getOne(); 
+        console.log(oneUser)
+
+        await AppDataSource
+            .createQueryBuilder()
+            .update(issues)
+            .set({ status:  ["inprogress"]})
+            .where("id = :id", { id: oneUser?.id })
+            .execute()
+
+        const oneUserInp = await AppDataSource
+            .createQueryBuilder()
+            .select("oneUserInp.counterId")
+            .from(issues, "oneUserInp")
+            .where("id = :id", { id :oneUser?.id})
+            .execute();
+
+        const oneUserInp2 = await AppDataSource
+            .createQueryBuilder()
+            .select("oneUserInp2.issue_no")
+            .from(issues, "oneUserInp2")
+            .where("id = :id", { id :oneUser?.id})
+            .execute();
+
+        let valCid = Number(Object.values(oneUserInp[0])) 
+        let valIno = Number(Object.values(oneUserInp2[0]))    
+        
+        await AppDataSource
+            .createQueryBuilder()
+            .update(counters)
+            .set({ ongoin:valIno})
+            .where("counter_number = :counter_number", { counter_number:valCid })
+            .execute()
+    
+            let responseData : Array<getOneIssuesDto> = new Array();
+
+            responseData.push(new getOneIssuesDto({
+                oneUser_id:oneUser?.id,
+                oneUser_name:oneUser?.name,
+                oneUser_issue_no:oneUser?.issue_no,
+                oneUser_tpno:oneUser?.tpno,
+                oneUser_issue:oneUser?.issue
+                
+            }))
+            
+            console.log(responseData)
+            return res.send(responseData);
+        
+        
     };
 }
 export default issuesController;

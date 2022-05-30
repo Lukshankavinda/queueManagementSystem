@@ -44,7 +44,7 @@ class normalUserController {
         const {email, password} = req.body;
 
         if (!(email && password)) {
-            res.status(400).send();
+            res.status(400).send('Please enter User name and Password ');
         }
         try {
             let user: normal_users|any;
@@ -53,7 +53,7 @@ class normalUserController {
                 .createQueryBuilder("user")
                 .where("user.email = :email", { email: email })
                 .getOne()
-
+            
             if (user && ! bcrypt.compareSync(password,user.password)) {
                 res.status(401).send('Incorrect Password');
                 return ;
@@ -67,7 +67,7 @@ class normalUserController {
                         tpno: user.tpno,
                     },
                     "SECRET",
-                    {expiresIn: "1h"}
+                    {expiresIn: "5h"}
                 );
             };
            

@@ -40,13 +40,13 @@ export class issues extends BaseEntity{
     @Column()
     issue_no!: number;
 
-    @ManyToOne(() => normal_users)
-    @JoinColumn()
-    normalUsers!: normal_users;
+    @ManyToOne(type => normal_users, { nullable: false , eager: true })
+    @JoinColumn({ name: 'normalUsersId', referencedColumnName: 'id' })
+    public normalUsers!: normal_users;
 
-    @ManyToOne(() => counters)
-    @JoinColumn()
-    counter!: counters;
+    @ManyToOne(type => counters, { nullable: false , eager: true })
+    @JoinColumn({ name: 'counterId' , referencedColumnName: 'id'})
+    public counter!: counters;
 
     @CreateDateColumn()
     createdAt!: Date;

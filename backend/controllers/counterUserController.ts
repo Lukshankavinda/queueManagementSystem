@@ -22,7 +22,7 @@ class counterUserController{
 
         const errors = await validate(counter_users);
         if (errors.length > 0) {
-            res.status(400).send(errors);
+            res.status(400).json({message:errors});
             return;
         }
         try {
@@ -34,10 +34,10 @@ class counterUserController{
                     .execute()
 
         } catch (e) {
-            res.status(409).send('This Counter person Already existed');
+            res.status(409).json({message: 'This Counter person Already existed'});
             return ;
         }
-        res.status(201).send('New Counter person is Registered ')
+        res.status(201).json({message: 'New Counter person is Registered '});
     };
 
 
@@ -45,7 +45,7 @@ class counterUserController{
         const {user_name, password} = req.body;
 
         if (!(user_name && password)) {
-            res.status(400).send();
+            res.status(400).json({message:'Please enter User name and Password '});
         }
 
         let user: counter_users|any;
@@ -74,7 +74,7 @@ class counterUserController{
                 .execute()
 
             if (user && !bcrypt.compareSync(password, user.password)) {
-                res.status(401).send('Incorrect Password');
+                res.status(401).json({message:'Incorrect Password'});
                 return ;
             }
 
@@ -93,7 +93,7 @@ class counterUserController{
 
             res.status(200).json({ access_token: generateJWT()});
         } catch (error) {
-            res.status(401).send(error);
+            res.status(401).json({message:error});
         }
     };
 

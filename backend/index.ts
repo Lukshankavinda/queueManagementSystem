@@ -10,8 +10,8 @@ import issuesRoutes from './routes/issuesRoutes'
 
 const app = express();
 app.use(cors());
-app.use(BodyParser.json());
-app.use(BodyParser.urlencoded({extended: true}))
+app.use(express.json());
+app.use(express.urlencoded({extended: true}))
 
 
 async function main () {
