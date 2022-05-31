@@ -5,6 +5,8 @@ import { counters } from '../entities/counters'
 import { normal_users } from '../entities/normal_users';
 import { issues } from '../entities/issues'
 import {onGoingDto} from '../dto/onGoingDto'
+import {getCounterDto} from '../dto/getCounterDto'
+import {getUserDto} from '../dto/getUserDto'
 import {Brackets } from "typeorm";
 
 
@@ -118,6 +120,30 @@ class counterController{
                 return res.send('false') 
             }
     };
+
+    static getUser = async (req:Request,res:Response) => {
+
+        let responseData : Array<getUserDto> = new Array();
+        responseData.push(new getUserDto({
+             name:res.locals.jwt.name
+            }));
+
+        return res.send(responseData);
+
+    };
+
+    static getCounter = async (req:Request,res:Response) => {
+
+        let responseData : Array<getCounterDto> = new Array();
+        responseData.push(new getCounterDto({
+            name:res.locals.jwt.name,
+            counter_number:res.locals.jwt.counter_number
+            }));
+        
+        return res.send(responseData);
+
+    };
+
 
 }
 

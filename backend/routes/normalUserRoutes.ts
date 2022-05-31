@@ -9,5 +9,6 @@ router.post('/user/register', normalUserController.addNormalUser); // http://loc
 router.post('/user/login', normalUserController.login);  // http://localhost:5000/user/login
 router.get('/user/ongoing',auth, counterController.onGoingQueue);  // http://localhost:5000/user/ongoing  
 router.get('/user/isAdd/:email', counterController.isIssueAdded);  // http://localhost:5000/user/isAdd
+router.get('/user/getUser',auth, counterController.getUser);  // http://localhost:5000/user/getUser  
 
 export default router;

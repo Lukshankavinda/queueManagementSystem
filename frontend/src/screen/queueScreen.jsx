@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import axios from "axios";
-//import Form from 'react-bootstrap/Form'
-import { Button, Stack, Row, Col } from "react-bootstrap";
+import { Button, Col } from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {useNavigate, Link} from 'react-router-dom'
+import {useNavigate} from 'react-router-dom'
 import UserNavbar from './userNavbar';
 import io from 'socket.io-client' 
 const socket = io.connect("http://localhost:5000");
@@ -41,6 +40,13 @@ function QueueScreen() {
       setRequestError(err)
     })
   },[])
+
+  useEffect(() => {
+      socket.on('receive_message',(data) =>{
+        console.log(data)
+        alert(data.message)
+      })
+  })
 
   const handleClose =()=>{
     axios.put(`http://localhost:5000/user/deleteIssue/${posts.map(post=>post.id)}`,

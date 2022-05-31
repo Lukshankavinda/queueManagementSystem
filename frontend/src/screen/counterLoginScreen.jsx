@@ -27,6 +27,7 @@ function CounterLoginScreen(props){
         }   
         ).then(response=>{
             setLoading(false);
+            localStorage.removeItem('counterJWT')
             localStorage.setItem('counterJWT',response.data.access_token)
             const counterToken= localStorage.getItem('counterJWT')
             console.log("counterToken", counterToken)

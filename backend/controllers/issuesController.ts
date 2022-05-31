@@ -203,7 +203,7 @@ class issuesController{
         res.send('del')
 
     };
-    
+
     static doneNext = async (req:Request,res:Response) => {
 
         const {id} = req.params;
@@ -224,7 +224,7 @@ class issuesController{
                     qb.where("oneUser.status = :status", { status: "inprogress",})
                     qb.orWhere("oneUser.status = :status1", { status1: "waiting"  })
                 }),)
-            .orderBy({ "status": 'DESC'})
+            .orderBy({ "status":'ASC'})
             .getOne(); 
         console.log(oneUser)
 
@@ -260,7 +260,6 @@ class issuesController{
             .execute()
     
             let responseData : Array<getOneIssuesDto> = new Array();
-
             responseData.push(new getOneIssuesDto({
                 oneUser_id:oneUser?.id,
                 oneUser_name:oneUser?.name,

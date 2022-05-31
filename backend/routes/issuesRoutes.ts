@@ -1,5 +1,6 @@
 import { Router } from "express";
 import issuesController from '../controllers/issuesController';
+import counterController from '../controllers/counterController';
 import auth from '../middleware/auth';
 const router = Router();
 
@@ -9,5 +10,6 @@ router.get('/counter/getOne/:id',auth, issuesController.getOneIssues); // http:/
 router.put('/user/deleteIssue/:id',auth, issuesController.deleteIssues); // http://localhost:5000/user/deleteIssue/
 router.put('/counter/deleteIssue/:id',auth, issuesController.deleteIssues); // http://localhost:5000/counter/deleteIssue/
 router.get('/counter/doneNext/:id',auth, issuesController.doneNext); // http://localhost:5000/counter/doneNext
+
 
 export default router;

@@ -27,6 +27,7 @@ function UserLoginScreen(props){
         }   
         ).then(response=>{
             setLoading(false);
+            localStorage.removeItem('userJWT')
             localStorage.setItem('userJWT',response.data.access_token)
             const userToken = localStorage.getItem('userJWT')
             console.log("userToken", userToken)

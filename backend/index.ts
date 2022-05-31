@@ -34,14 +34,19 @@ async function main () {
         app.use('/', counterUserRoutes);
         app.use('/', issuesRoutes);
 
+        io.on("connection",(socket)=> {
+            console.log('user connected : '+ socket.id);
+
+            socket.on('send_Message',(data) => {
+                console.log(data)
+                socket.broadcast.emit('receive_message',data)
+            })
+         })
+
         server.listen('5000', () => {
             console.log('server running in port 5000');
         })
 
-        io.on("connection",(socket)=> {
-            console.log('user connected:'+ socket.id);
-         })
-        
     } catch (error) {
         console.error(error)
     }

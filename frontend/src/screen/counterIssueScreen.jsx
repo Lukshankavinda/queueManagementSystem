@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react'
 import axios from "axios";
-import Form from 'react-bootstrap/Form'
 import InputGroup from 'react-bootstrap/InputGroup'
-import { Button, Nav, Col, FormControl, Row } from "react-bootstrap";
-import {useNavigate, Link, useLocation } from 'react-router-dom'
+import {useNavigate, useLocation } from 'react-router-dom'
 import CounterNavbar from './counterNavbar';
+import io from 'socket.io-client' 
+const socket = io.connect("http://localhost:5000");
+
 
 function CounterIssueScreen() {
   
   const location = useLocation();
   const [posts,setposts] =useState([])
   const [error,setError]=useState(null);
-  const [loading,setLoading]=useState(false);
   const navigate = useNavigate()
   
  
@@ -37,36 +37,6 @@ function CounterIssueScreen() {
         console.log(err)
       })
       },[])
-
-  const handleDoneNext = (id)=>{
-
-      // setError(null);
-      // setLoading(true);
-
-      // axios.get(`http://localhost:5000/counter/doneNext/${id}`)
-      // .then(response=>{
-            
-      // }).catch(error=>{
-              
-      // });
-        
-    }
-      
-    const handleDone = (id)=>{
-
-        // setError(null);
-        // setLoading(true);
-
-        // axios.put(`http://localhost:5000/counter/deleteIssue/${id}`,
-        // {  
-          
-        // }).then(response=>{
-            
-        // }).catch(error=>{
-              
-        // });
-    }
-  
 
   return (
     <div>
@@ -114,17 +84,27 @@ function CounterIssueScreen() {
         <div>
             <input type="button" 
                 value={"Done"} 
-                disabled={loading}
                 className="border-0 text-white"
                 style={{marginTop:"1%", marginLeft:'1%', backgroundColor:'#0d47a1', }}
-                onClick={handleDone(post.id)}  />
+                onClick={()=>{
+                  axios.put(`http://localhost:5000/counter/deleteIssue/${post.id}`)
+                    .then(response=>{
+                      navigate('/counter/getall')
+                    }).catch(error=>{
+                      setError("some thing is wrong");
+                    });}}  />
 
             <input type="button"
                 value={"Done and Next"} 
-                disabled={loading}
                 className="border-0 text-white"
                 style={{marginTop:"1%", marginLeft:'1%', backgroundColor:'#d50000', }}
-                onClick={handleDoneNext(post.id)}  />
+                onClick={()=>{
+                  axios.get(`http://localhost:5000/counter/doneNext/${post.id}`)
+                  .then(response=>{
+                    setposts(response.data)
+                  }).catch(error=>{
+                    setError("some thing is wrong");
+                  })}}  />
             </div>
         </>))}
     </div>
