@@ -39,7 +39,7 @@ async function main () {
 
             socket.on('send_Message',(data) => {
                 console.log(data)
-                socket.broadcast.emit('receive_message',data)
+                //socket.broadcast.emit('receive_message',data)
             })
          })
 

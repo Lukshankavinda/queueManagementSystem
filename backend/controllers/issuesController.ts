@@ -126,7 +126,8 @@ class issuesController{
             .where("user.status = :status OR user.status = :status1",{ status: "inprogress", status1: "waiting" })
             .andWhere("user.counter = :counter", { counter:res.locals.jwt.counter_id })
             .orderBy({ "status": 'ASC'})
-            .getMany()
+            .execute();
+
         console.log(user)
         let responseData : Array<getIssuesDto> = new Array();
 
@@ -179,7 +180,8 @@ class issuesController{
             .set({ ongoin:valIno})
             .where("counter_number = :counter_number", { counter_number:valCid })
             .execute()
-    
+
+        console.log(oneUser)
         let responseOneData : Array<getOneIssuesDto> = new Array();
 
         for (const  oneUse of oneUser) {
@@ -265,8 +267,8 @@ class issuesController{
                 oneUser_name:oneUser?.name,
                 oneUser_issue_no:oneUser?.issue_no,
                 oneUser_tpno:oneUser?.tpno,
-                oneUser_issue:oneUser?.issue
-                
+                oneUser_issue:oneUser?.issue,
+                oneUser_counterId:res.locals.jwt.counter_id
             }))
             
             console.log(responseData)

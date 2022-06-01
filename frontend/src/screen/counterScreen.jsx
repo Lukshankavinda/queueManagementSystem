@@ -45,7 +45,10 @@ function CounterScreen(props) {
   },[])
 
   const sendMessage = () => {
-    socket.emit('send_Message',{ message : 'Hello , Your are next'});
+    socket.emit('send_Message',{ 
+        message: 'Hello , Now your tern',
+        issue_No: posts.map(post=>post.issue_no),
+        counter_No: posts.map(post=>post.counter_id) });
   };
 
   

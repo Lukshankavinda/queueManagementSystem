@@ -4,6 +4,7 @@ export class getOneIssuesDto {
     issue_no: number|any;
     tpno: string|any;
     issue: string|any;
+    counter_id: number|any;
 
     constructor(obj : any){
         if(obj){
@@ -12,6 +13,7 @@ export class getOneIssuesDto {
         this.issue_no = obj.oneUser_issue_no;
         this.tpno = obj.oneUser_tpno;
         this.issue = obj.oneUser_issue;
+        this.counter_id = obj.oneUser_counterId;
         }
     }
   }

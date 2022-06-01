@@ -3,8 +3,8 @@ import axios from "axios";
 import InputGroup from 'react-bootstrap/InputGroup'
 import {useNavigate, useLocation } from 'react-router-dom'
 import CounterNavbar from './counterNavbar';
-import io from 'socket.io-client' 
-const socket = io.connect("http://localhost:5000");
+//import io from 'socket.io-client' 
+//const socket = io.connect("http://localhost:5000");
 
 
 function CounterIssueScreen() {
