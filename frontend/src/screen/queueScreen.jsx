@@ -9,8 +9,7 @@ const socket = io.connect("http://localhost:5000");
 
 
 function QueueScreen() {
-
-  socket.emit()
+  
   const [posts,setposts] =useState([])
   const [requestError,setRequestError]= useState()
   const [error,setError]=useState(null);
@@ -30,8 +29,8 @@ function QueueScreen() {
   )
 
   useEffect(()=>{
-    axios.get("http://localhost:5000/user/ongoing",
-    {}).then(res=>{
+    axios.get("http://localhost:5000/user/ongoing")
+    .then(res=>{
       console.log(res)
       setposts(res.data)
   
@@ -44,8 +43,19 @@ function QueueScreen() {
   useEffect(() => {
       socket.on('receive_message',(data) =>{
         console.log(data)
-        alert(data.message)
+        //if ((data.issue_No == posts.map(post=>post.id))&&(data.counter_No == posts.map(post=>post.counterId))) {
+          alert(data.message)
+        //}
       })
+  })
+
+  useEffect(() => {
+    socket.on('receive_messageNext',(data) =>{
+      console.log(data)
+      //if ((data.issue_No == posts.map(post=>post.id))&&(data.counter_No == posts.map(post=>post.counterId))) {
+        alert(data.message)
+      //}
+    })
   })
 
   const handleClose =()=>{
@@ -64,9 +74,9 @@ function QueueScreen() {
       <>
         <h2 style={{ textAlign: "left", marginLeft: "10%" }}> Ongoing Queue</h2>
 
-        <div class="card" style={{ marginTop: "5px", width: "30%", marginLeft: "35%" }}>
-          <div class="card-body">
-            <h1 class="card-title">Current Number</h1>
+        <div className="card" style={{ marginTop: "5px", width: "30%", marginLeft: "35%" }}>
+          <div className="card-body">
+            <h1 className="card-title">Current Number</h1>
             <h1 style={{ color: "red", fontSize: "150px" }}>{post.ongoin}</h1>
           </div>
         </div><h2 style={{ marginTop: "5px", textAlign: "center" }}> Next: {post.ongoin + 1} </h2>

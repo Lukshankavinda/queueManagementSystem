@@ -2,7 +2,7 @@ import {Request, Response} from 'express';
 
 import { AppDataSource } from '../data-source';
 import { counters } from '../entities/counters'
-import { normal_users } from '../entities/normal_users';
+//import { normal_users } from '../entities/normal_users';
 import { issues } from '../entities/issues'
 import {onGoingDto} from '../dto/onGoingDto'
 import {getCounterDto} from '../dto/getCounterDto'
@@ -26,7 +26,7 @@ class counterController{
                     qb.orWhere("issuCid.status = :status1", { status1: "waiting"  })
                 }),)
             .execute()
-        console.log(issuCid)
+        //console.log(issuCid)
 
         let issueIno : issues|any;
         issueIno = await AppDataSource
@@ -40,7 +40,7 @@ class counterController{
                     qb.orWhere("issueIno.status = :status1", { status1: "waiting"  })
                 }),)
             .execute()
-        console.log(issuCid)
+        //console.log(issuCid)
         let issueIId : issues|any;
         issueIId = await AppDataSource
             .createQueryBuilder()
@@ -53,7 +53,7 @@ class counterController{
                     qb.orWhere("issueIId.status = :status1", { status1: "waiting"  })
                 }),)
             .execute()
-        console.log(issueIId)
+        //console.log(issueIId)
         let valIssuCid = Number(Object.values(issuCid[0])) 
         let valIssueIno = Number(Object.values(issueIno[0]))
         let valIssueIID = Number(Object.values(issueIId[0]))
@@ -75,8 +75,7 @@ class counterController{
                 issue_no: valIssueIno,
                 ongoin: valCounter
             }));
-    
-        
+
         return res.send(responseData);
     };
 
@@ -113,10 +112,10 @@ class counterController{
 
             var lenIssueEX = Object.keys(issueEX).length;
             if (lenIssueEX != 0) {
-                console.log("true")
+                //console.log("true")
                 return res.send('true')
             } else {
-                console.log("false")
+                //console.log("false")
                 return res.send('false') 
             }
     };

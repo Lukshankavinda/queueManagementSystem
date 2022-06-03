@@ -11,12 +11,10 @@ class normalUserController {
     static addNormalUser = async (req:Request, res:Response) => {
 
         const {name, email, password, tpno} = req.body;
-        let n_user = new normal_users();
-       
+        let n_user = new normal_users();      
         n_user.name = name;
         n_user.email = email;
         n_user.tpno = tpno;
-
         n_user.password = bcrypt.hashSync(password, 10);
 
         const errors = await validate(normal_users);

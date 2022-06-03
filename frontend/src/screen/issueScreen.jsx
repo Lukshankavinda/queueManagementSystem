@@ -37,10 +37,8 @@ function IssueScreen(props) {
         name:uname,
         tpno:utpno,
         email:uemail,
-        issue:issueDetails,
-        headers: {"Authorization" : `Bearer ${userToken}`} 
-      }
-      ).then(respose=>{
+        issue:issueDetails,})
+      .then(respose=>{
         console.log(respose)
         alert("Your Issue is submitted!")
         navigater('/user/queue')

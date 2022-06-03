@@ -7,8 +7,7 @@ import { counters } from '../entities/counters';
 import {getIssuesDto} from '../dto/getIssuesDto'
 import {getOneIssuesDto} from '../dto/getOneIssuesDto'
 
-
-class issuesController{
+class issuesController {
 
     static addIssue = async (req:Request, res:Response) => {
 
@@ -123,12 +122,16 @@ class issuesController{
             .createQueryBuilder()
             .select("user")
             .from(issues, "user")
-            .where("user.status = :status OR user.status = :status1",{ status: "inprogress", status1: "waiting" })
-            .andWhere("user.counter = :counter", { counter:res.locals.jwt.counter_id })
-            .orderBy({ "status": 'ASC'})
+            .where('user.counter = :counter', {counter:res.locals.jwt.counter_id })
+            .andWhere(
+                new Brackets((qb) => {
+                    qb.where("user.status = :status", { status: "inprogress",})
+                    qb.orWhere("user.status = :status1", { status1: "waiting"  })
+                }),)
+            .orderBy({ "issue_no": 'ASC'})
             .execute();
 
-        console.log(user)
+        //console.log(user)
         let responseData : Array<getIssuesDto> = new Array();
 
         for (const  use of user) {
@@ -181,7 +184,7 @@ class issuesController{
             .where("counter_number = :counter_number", { counter_number:valCid })
             .execute()
 
-        console.log(oneUser)
+        //console.log(oneUser)
         let responseOneData : Array<getOneIssuesDto> = new Array();
 
         for (const  oneUse of oneUser) {
@@ -215,7 +218,7 @@ class issuesController{
             .set({ status:  ["close"]})
             .where("id = :id", { id: id })
             .execute()
-        
+       
         const oneUser = await AppDataSource
             .createQueryBuilder()
             .select("oneUser")
@@ -228,7 +231,7 @@ class issuesController{
                 }),)
             .orderBy({ "status":'ASC'})
             .getOne(); 
-        console.log(oneUser)
+        //console.log(oneUser)
 
         await AppDataSource
             .createQueryBuilder()
@@ -236,7 +239,7 @@ class issuesController{
             .set({ status:  ["inprogress"]})
             .where("id = :id", { id: oneUser?.id })
             .execute()
-
+        
         const oneUserInp = await AppDataSource
             .createQueryBuilder()
             .select("oneUserInp.counterId")
@@ -261,19 +264,19 @@ class issuesController{
             .where("counter_number = :counter_number", { counter_number:valCid })
             .execute()
     
-            let responseData : Array<getOneIssuesDto> = new Array();
-            responseData.push(new getOneIssuesDto({
-                oneUser_id:oneUser?.id,
-                oneUser_name:oneUser?.name,
-                oneUser_issue_no:oneUser?.issue_no,
-                oneUser_tpno:oneUser?.tpno,
-                oneUser_issue:oneUser?.issue,
-                oneUser_counterId:res.locals.jwt.counter_id
-            }))
+        //     let responseData : Array<getOneIssuesDto> = new Array();
+        //     responseData.push(new getOneIssuesDto({
+        //         oneUser_id:oneUser?.id,
+        //         oneUser_name:oneUser?.name,
+        //         oneUser_issue_no:oneUser?.issue_no,
+        //         oneUser_tpno:oneUser?.tpno,
+        //         oneUser_issue:oneUser?.issue,
+        //         oneUser_counterId:res.locals.jwt.counter_id
+        //     }))
             
-            console.log(responseData)
-            return res.send(responseData);
-        
+        //     //console.log(responseData)
+        //     return res.send(responseData);
+        res.send('del')
         
     };
 }

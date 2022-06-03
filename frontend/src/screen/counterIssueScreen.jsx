@@ -3,8 +3,9 @@ import axios from "axios";
 import InputGroup from 'react-bootstrap/InputGroup'
 import {useNavigate, useLocation } from 'react-router-dom'
 import CounterNavbar from './counterNavbar';
-//import io from 'socket.io-client' 
-//const socket = io.connect("http://localhost:5000");
+import io from 'socket.io-client' 
+
+const socket = io.connect("http://localhost:5000");
 
 
 function CounterIssueScreen() {
@@ -30,13 +31,49 @@ function CounterIssueScreen() {
 
   useEffect(()=>{
     axios.get(`http://localhost:5000/counter/getOne/${location.state.id}`)
-      .then(respose=>{
-        console.log(respose)
-        setposts(respose.data)
-      }).catch(err=>{
+    .then(resposeCIS=>{
+        console.log(resposeCIS)
+        setposts(resposeCIS.data)
+    }).catch(err=>{
         console.log(err)
+    })},[])
+
+    const done = (post) =>{
+      axios.put(`http://localhost:5000/counter/deleteIssue/${post.id}`)
+      .then(response=>{
+          navigate('/counter/getall')
+          socket.emit('send_MessageNext',{ 
+            message: 'Hello , Your tern is next be ready',
+            issue_No:(post.issue_no)+1,
+            counter_No:post.counter_id})
+
+          window.location.reload()
+      }).catch(error=>{
+          setError("some thing is wrong");
       })
-      },[])
+    }
+
+    const doneAndNext = (post) =>{
+      axios.get(`http://localhost:5000/counter/doneNext/${post.id}`)
+        .then(response=>{
+            navigate(`/counter/getone/${(post.id)+1}`,{state:{id:(post.id)+1}})
+
+            socket.emit('send_Message',{ 
+                message: 'Hello , Now your turn',
+                issue_No:(post.issue_no)+1,
+                counter_No:post.counter_id });
+
+            socket.emit('send_MessageNext',{ 
+                message: 'Hello , Your tern is next be ready',
+                issue_No:(post.issue_no)+2,
+                counter_No:post.counter_id});
+                  
+            window.location.reload();
+            
+        }).catch(error=>{
+            setError("some thing is wrong");
+        })
+    }
 
   return (
     <div>
@@ -71,6 +108,7 @@ function CounterIssueScreen() {
                         Issue 
                 </InputGroup.Text>
               </InputGroup>
+
               <InputGroup>
                 <InputGroup.Text  
                     className=" text-body border-0 bg-body"
@@ -79,6 +117,7 @@ function CounterIssueScreen() {
                 </InputGroup.Text>
               </InputGroup>
               </InputGroup>
+              
             </div>
         </div>
         <div>
@@ -86,25 +125,14 @@ function CounterIssueScreen() {
                 value={"Done"} 
                 className="border-0 text-white"
                 style={{marginTop:"1%", marginLeft:'1%', backgroundColor:'#0d47a1', }}
-                onClick={()=>{
-                  axios.put(`http://localhost:5000/counter/deleteIssue/${post.id}`)
-                    .then(response=>{
-                      navigate('/counter/getall')
-                    }).catch(error=>{
-                      setError("some thing is wrong");
-                    });}}  />
+                onClick={()=>{done(post)}}  />
 
             <input type="button"
                 value={"Done and Next"} 
                 className="border-0 text-white"
                 style={{marginTop:"1%", marginLeft:'1%', backgroundColor:'#d50000', }}
-                onClick={()=>{
-                  axios.get(`http://localhost:5000/counter/doneNext/${post.id}`)
-                  .then(response=>{
-                    setposts(response.data)
-                  }).catch(error=>{
-                    setError("some thing is wrong");
-                  })}}  />
+                onClick={()=>{doneAndNext(post)}}  />
+
             </div>
         </>))}
     </div>

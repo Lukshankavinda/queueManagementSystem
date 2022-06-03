@@ -27,8 +27,8 @@ function UserNavbar() {
     )
 
     useEffect(()=>{
-        axios.get(" http://localhost:5000/user/getUser",
-        {}).then(res=>{
+        axios.get(" http://localhost:5000/user/getUser")
+        .then(res=>{
           console.log(res.data)
           setposts(res.data)
       

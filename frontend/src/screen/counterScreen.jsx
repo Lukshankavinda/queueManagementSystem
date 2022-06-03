@@ -31,24 +31,30 @@ function CounterScreen(props) {
   )
 
   useEffect(()=>{
-    axios.get("http://localhost:5000/counter/getAll",
-    {
-
-    }).then(res=>{
+    axios.get("http://localhost:5000/counter/getAll")
+    .then(res=>{
       console.log(res)
       setposts(res.data)
-  
+      sendMessageNext()
     }).catch(err=>{
       console.log(err)
       setRequestError(err)
     })
   },[])
 
-  const sendMessage = () => {
+  const sendMessageNext = () => {
+    socket.emit('send_MessageNext',{ 
+      message: 'Hello , Your tern is next be ready',
+      issue_No:posts[0].issue_no,
+      counter_No:posts[0].counter_id, 
+    });
+  }
+
+  const sendMessage = (issue_no,counter_id) => {
     socket.emit('send_Message',{ 
-        message: 'Hello , Now your tern',
-        issue_No: posts.map(post=>post.issue_no),
-        counter_No: posts.map(post=>post.counter_id) });
+        message: 'Hello , Now your turn',
+        issue_No:issue_no,
+        counter_No:counter_id });
   };
 
   
@@ -64,7 +70,7 @@ function CounterScreen(props) {
                 value={"Close Counter"} 
                 className="border-0 text-white btn-danger rounded"
                 onClick={()=>{
-                  axios.put(`http://localhost:5000/counter/close`)
+                  axios.put(`http://localhost:5000/counter/close`,)
                     .then(response=>{
                       navigate('/')
                     }).catch(error=>{
@@ -84,11 +90,11 @@ function CounterScreen(props) {
                         placeholder={post.name} disabled/>
                       <FormControl
                         placeholder={post.tpno} disabled/>
-                      {<a onClick={()=>{navigate(`/counter/getone/${post.id}`,{state:{id:post.id}});}}>   
+                      {<a onClick={()=>{navigate(`/counter/getone/${post.id}`,{state:{id:post.id}})}}>   
                         <input type="button" 
                             value={ "Call"} 
-                            onClick={sendMessage}
-                            class="btn btn-secondary"/>
+                            onClick={() =>sendMessage(post.issue_no,post.counter_id)}
+                            className="btn btn-secondary"/>
                       </a>}
                   </InputGroup>
                 </Col>

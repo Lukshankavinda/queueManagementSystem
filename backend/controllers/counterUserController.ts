@@ -14,10 +14,8 @@ class counterUserController{
 
         const {name, user_name, password} = req.body;
         let c_user = new counter_users;
-       
         c_user.name = name;
         c_user.user_name = user_name;
-
         c_user.password = bcrypt.hashSync(password, 10);
 
         const errors = await validate(counter_users);

@@ -11,26 +11,55 @@ const socket = io.connect("http://localhost:5000");
 
 function NotificationScreen() {
 
+  const [posts,setposts] =useState([])
+  const [requestError,setRequestError]= useState()
+  
   const userToken= localStorage.getItem('userJWT')
 
-  axios.interceptors.request.use(
-    config  => {
-        config.headers.authorization =`Bearer ${userToken}`;
-        console.log(config)
-        return config;
-    },
-    error =>{
-        return Promise.reject(error)
-    }
-  )
+  // axios.interceptors.request.use(
+  //   config  => {
+  //       config.headers.authorization =`Bearer ${userToken}`;
+  //       console.log(config)
+  //       return config;
+  //   },
+  //   error =>{
+  //       return Promise.reject(error)
+  //   }
+  // )
 
-  const [messageReceive, setMessageReceive] = useState()
+  useEffect(()=>{
+    axios.get("http://localhost:5000/user/ongoing",{
+      headers: {"Authorization" : `Bearer ${userToken}`} })
+    .then(res=>{
+      console.log(res)
+      setposts(res.data)
+  
+    }).catch(err=>{
+      console.log(err)
+      setRequestError(err)
+    })
+  },[])
 
+  const [messageReceive, setMessageReceive] = useState("")
+  
   useEffect(() => {
     socket.on('receive_message',(data) =>{
-      setMessageReceive(data.message);
+      console.log(data)
+      if ((data.issue_No == posts.map(post=>post.id))&&(data.counter_No == posts.map(post=>post.counterId))) {
+        setMessageReceive(data.message)
+      }
     })
   })
+
+  useEffect(() => {
+    socket.on('receive_messageNext',(data) =>{
+      console.log(data)
+      if ((data.issue_No == posts.map(post=>post.id))&&(data.counter_No == posts.map(post=>post.counterId))) {
+        setMessageReceive(data.message)
+      }
+    })
+  })
+
 
   return (
     <div>

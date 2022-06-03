@@ -1,6 +1,6 @@
 import "reflect-metadata"; 
 import express, {Request, Response} from 'express';
-import BodyParser from 'body-parser';
+//import BodyParser from 'body-parser';
 import cors from 'cors';
 import http from 'http';
 import {Server} from 'socket.io';
@@ -38,13 +38,18 @@ async function main () {
             console.log('user connected : '+ socket.id);
 
             socket.on('send_Message',(data) => {
-                console.log(data)
-                //socket.broadcast.emit('receive_message',data)
+                //console.log(data)
+                socket.broadcast.emit('receive_message',data)
+            })
+
+            socket.on('send_MessageNext',(data) => {
+                //console.log(data) 
+                socket.broadcast.emit('receive_messageNext',data)
             })
          })
 
         server.listen('5000', () => {
-            console.log('server running in port 5000');
+            console.log('server running in port 5000'); 
         })
 
     } catch (error) {

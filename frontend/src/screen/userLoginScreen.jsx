@@ -30,7 +30,7 @@ function UserLoginScreen(props){
             localStorage.removeItem('userJWT')
             localStorage.setItem('userJWT',response.data.access_token)
             const userToken = localStorage.getItem('userJWT')
-            console.log("userToken", userToken)
+            // console.log("userToken", userToken)
         }).catch(error=>{
             setLoading(false)
             if(error.response.status === 400 || error.response.status === 401 || error.response.status === 409)
@@ -49,11 +49,13 @@ function UserLoginScreen(props){
           console.log(res.data)
           setposts(res.data)
           if (res.data === false) {
-            console.log('get data if '+res.data)
+            /* console.log('get data if '+res.data)*/
             navigater('/user/issues');
+            window.location.reload()
           } else {
-            console.log('get data else '+res.data)
+            /*console.log('get data else '+res.data)*/
             navigater('/user/queue');
+            window.location.reload()
           }
         }).catch(err=>{
           console.log(err)

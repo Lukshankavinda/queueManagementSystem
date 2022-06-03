@@ -25,8 +25,8 @@ function CounterNavbar() {
     )
 
     useEffect(()=>{
-        axios.get("http://localhost:5000/counter/getCounter",
-        {}).then(res=>{
+        axios.get("http://localhost:5000/counter/getCounter")
+        .then(res=>{
           console.log(res)
           setposts(res.data)
       
