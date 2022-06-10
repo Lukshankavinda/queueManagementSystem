@@ -35,21 +35,13 @@ function CounterScreen(props) {
     .then(res=>{
       console.log(res)
       setposts(res.data)
-      sendMessageNext()
     }).catch(err=>{
       console.log(err)
       setRequestError(err)
     })
   },[])
 
-  const sendMessageNext = () => {
-    socket.emit('send_MessageNext',{ 
-      message: 'Hello , Your tern is next be ready',
-      issue_No:posts[0].issue_no,
-      counter_No:posts[0].counter_id, 
-    });
-  }
-
+  
   const sendMessage = (issue_no,counter_id) => {
     socket.emit('send_Message',{ 
         message: 'Hello , Now your turn',

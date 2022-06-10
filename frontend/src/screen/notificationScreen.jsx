@@ -40,7 +40,7 @@ function NotificationScreen() {
     })
   },[])
 
-  const [messageReceive, setMessageReceive] = useState("")
+  const [messageReceive, setMessageReceive] = useState([])
   
   useEffect(() => {
     socket.on('receive_message',(data) =>{

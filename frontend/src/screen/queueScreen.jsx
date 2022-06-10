@@ -43,20 +43,19 @@ function QueueScreen() {
   useEffect(() => {
       socket.on('receive_message',(data) =>{
         console.log(data)
-        //if ((data.issue_No == posts.map(post=>post.id))&&(data.counter_No == posts.map(post=>post.counterId))) {
+        if ((data.issue_No == posts.map(post=>post.id))&&(data.counter_No == posts.map(post=>post.counterId))) {
           alert(data.message)
-        //}
+        }
       })
   })
-
   useEffect(() => {
     socket.on('receive_messageNext',(data) =>{
       console.log(data)
-      //if ((data.issue_No == posts.map(post=>post.id))&&(data.counter_No == posts.map(post=>post.counterId))) {
+      if ((data.issue_No == posts.map(post=>post.id))&&(data.counter_No == posts.map(post=>post.counterId))) {
         alert(data.message)
-      //}
+      }
     })
-  })
+})
 
   const handleClose =()=>{
     axios.put(`http://localhost:5000/user/deleteIssue/${posts.map(post=>post.id)}`,

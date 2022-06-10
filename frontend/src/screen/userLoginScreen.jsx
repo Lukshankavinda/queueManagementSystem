@@ -51,11 +51,11 @@ function UserLoginScreen(props){
           if (res.data === false) {
             /* console.log('get data if '+res.data)*/
             navigater('/user/issues');
-            window.location.reload()
+            //window.location.reload()
           } else {
             /*console.log('get data else '+res.data)*/
             navigater('/user/queue');
-            window.location.reload()
+            //window.location.reload()
           }
         }).catch(err=>{
           console.log(err)

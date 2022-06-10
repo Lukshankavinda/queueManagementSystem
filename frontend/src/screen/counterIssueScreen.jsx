@@ -7,15 +7,13 @@ import io from 'socket.io-client'
 
 const socket = io.connect("http://localhost:5000");
 
-
 function CounterIssueScreen() {
   
   const location = useLocation();
   const [posts,setposts] =useState([])
   const [error,setError]=useState(null);
   const navigate = useNavigate()
-  
- 
+   
   const counterToken = localStorage.getItem('counterJWT')
 
   axios.interceptors.request.use(
@@ -42,10 +40,6 @@ function CounterIssueScreen() {
       axios.put(`http://localhost:5000/counter/deleteIssue/${post.id}`)
       .then(response=>{
           navigate('/counter/getall')
-          socket.emit('send_MessageNext',{ 
-            message: 'Hello , Your tern is next be ready',
-            issue_No:(post.issue_no)+1,
-            counter_No:post.counter_id})
 
           window.location.reload()
       }).catch(error=>{
@@ -63,11 +57,6 @@ function CounterIssueScreen() {
                 issue_No:(post.issue_no)+1,
                 counter_No:post.counter_id });
 
-            socket.emit('send_MessageNext',{ 
-                message: 'Hello , Your tern is next be ready',
-                issue_No:(post.issue_no)+2,
-                counter_No:post.counter_id});
-                  
             window.location.reload();
             
         }).catch(error=>{

@@ -9,6 +9,7 @@ import { AppDataSource } from "./data-source";
 import normalUserRoutes from './routes/normalUserRoutes'
 import counterUserRoutes from './routes/counterUserRoutes'
 import issuesRoutes from './routes/issuesRoutes'
+import { counters } from './entities/counters';
 
 const app = express();
 app.use(cors());
@@ -37,14 +38,30 @@ async function main () {
         io.on("connection",(socket)=> {
             console.log('user connected : '+ socket.id);
 
-            socket.on('send_Message',(data) => {
+            socket.on('send_Message',async (data) => {
                 //console.log(data)
                 socket.broadcast.emit('receive_message',data)
-            })
 
-            socket.on('send_MessageNext',(data) => {
-                //console.log(data) 
-                socket.broadcast.emit('receive_messageNext',data)
+                socket.broadcast.emit('receive_messageNext',{
+                    message: "Dear customer Next your turn",
+                    issue_No:data.issue_No + 1,
+                    counter_No:data.counter_No
+                })
+
+                let counter : counters|any;
+                counter =await AppDataSource
+                    .createQueryBuilder()
+                    .select('counter.ongoin')
+                    .from(counters,'counter')
+                    .where('counter.id = :id', {id:data.counter_No})
+                    .execute()
+
+                 let valCounter = Number(Object.values(counter[0]))
+
+                socket.broadcast.emit('receive_Counter',{
+                    counter_No:data.counter_No,
+                    ongoin_No: valCounter
+                })
             })
          })
 
