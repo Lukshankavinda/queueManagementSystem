@@ -16,24 +16,21 @@ function NotificationScreen() {
   
   const userToken= localStorage.getItem('userJWT')
 
-  // axios.interceptors.request.use(
-  //   config  => {
-  //       config.headers.authorization =`Bearer ${userToken}`;
-  //       console.log(config)
-  //       return config;
-  //   },
-  //   error =>{
-  //       return Promise.reject(error)
-  //   }
-  // )
+  axios.interceptors.request.use(
+    config  => {
+        config.headers.authorization =`Bearer ${userToken}`;
+        console.log(config)
+        return config;
+    },
+    error =>{
+        return Promise.reject(error)
+  })
 
   useEffect(()=>{
-    axios.get("http://localhost:5000/user/ongoing",{
-      headers: {"Authorization" : `Bearer ${userToken}`} })
+    axios.get("http://localhost:5000/user/ongoing")
     .then(res=>{
       console.log(res)
       setposts(res.data)
-  
     }).catch(err=>{
       console.log(err)
       setRequestError(err)
@@ -45,7 +42,7 @@ function NotificationScreen() {
   useEffect(() => {
     socket.on('receive_message',(data) =>{
       console.log(data)
-      if ((data.issue_No == posts.map(post=>post.id))&&(data.counter_No == posts.map(post=>post.counterId))) {
+      if ((data.issue_No == posts.map(post=>post.issue_no))&&(data.counter_No == posts.map(post=>post.counterId))) {
         setMessageReceive(data.message)
       }
     })
@@ -54,7 +51,7 @@ function NotificationScreen() {
   useEffect(() => {
     socket.on('receive_messageNext',(data) =>{
       console.log(data)
-      if ((data.issue_No == posts.map(post=>post.id))&&(data.counter_No == posts.map(post=>post.counterId))) {
+      if ((data.issue_No == posts.map(post=>post.issue_no))&&(data.counter_No == posts.map(post=>post.counterId))) {
         setMessageReceive(data.message)
       }
     })
